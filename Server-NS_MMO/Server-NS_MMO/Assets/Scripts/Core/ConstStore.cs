@@ -9,8 +9,8 @@ namespace Assets.Scripts.Core
 {
     class ConstStore
     {
-        public static IPAddress SERVER_ADDRESS = IPAddress.Parse("127.0.0.1");
-        public static int SERVER_PORT = 8888;
+        public static IPAddress SERVER_ADDRESS = IPAddress.Parse("51.91.156.75");
+        public static int SERVER_PORT = 5757;
         public static int SERVER_TIMEOUT = 10_000;
     }
 }
