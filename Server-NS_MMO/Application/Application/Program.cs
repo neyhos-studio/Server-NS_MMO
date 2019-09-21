@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading;
-using Application.neyhos.studio;
+using Application.Server.Entities;
+using Application.Entities;
+using Application.Server.Repository;
+using Application.Server.Constants;
 
 namespace Application
 {
     class Program
     {
+
+
         #region private members 	
         /// <summary> 	
         /// TCPListener to listen for incomming TCP connection 	
@@ -26,8 +31,11 @@ namespace Application
         /// <summary>
         /// List of client connected to the server
         /// </summary>
-        public static List<Client> clients { get; }
+        public static List<Client> onlineClients= new List<Client>();
+        public static object IAction { get; private set; }
         #endregion
+
+
 
         static void Main(string[] args)
         {
@@ -39,11 +47,37 @@ namespace Application
             tcpListenerThread.IsBackground = true;
             tcpListenerThread.Start();
 
-            while (true)
+            // Keeping the app running
+            bool serverIsRunning = true;
+
+            while (serverIsRunning)
             {
+
+                // Wait for user input
+                Console.Write("Server/NS_MMO : ");
+                string cmd = Console.ReadLine();
+
+                // Parse the user input
+                switch (cmd)
+                {
+                    case "exit":
+                        serverIsRunning = false;
+                        break;
+
+                    case "test":
+
+                        ServerMessage serverMessage = new ServerMessage("ACTION", new string[] { "AAA", "BBB", "CCC" });
+                        Console.WriteLine(serverMessage.getMessage());
+                        
+                        break;
+                    default:
+                        break;
+                }
 
             }
         }
+
+
 
         /// <summary>
         /// This methods allow server to listen for any incomming users request 
@@ -75,8 +109,9 @@ namespace Application
 
                                 // Convert byte array to string message. 							
                                 string clientMessage = Encoding.ASCII.GetString(incommingData);
-                                Console.WriteLine("client message received as: " + clientMessage);
+                                Console.WriteLine("Client send : " + clientMessage);
 
+                                // Client message filter and process
                                 RequestManager(clientMessage);
 
                             }
@@ -86,37 +121,48 @@ namespace Application
             }
             catch (SocketException socketException)
             {
-                Console.WriteLine("SocketException " + socketException.ToString());
+                Console.WriteLine("SocketException : " + socketException.ToString());
             }
         }
 
+
+
         /// <summary>
-        /// Allow server to manage users request. The server serve.
+        /// Allow server to manage users request. The server is serving.
         /// </summary>
         /// <param name="clientMessage"> Message receive from cilent. </param>
         private static void RequestManager(string clientMessage)
         {
+            // Put the client string message into an object ClientMessage
             ClientMessage msg = new ClientMessage(clientMessage);
-            neyhos.studio.Action action = new neyhos.studio.Action();
+
+            // Client message is process depending on the ACTION send;
             switch (msg.action)
             {
-                case "CONNECTION":
-                    action.ClientConnect(msg);
+                case ConstsActions.CONNECTION :
+                    Client newClient = Actions.ClientConnect(msg);
+                    if (newClient != null)
+                    {
+                        onlineClients.Add(newClient);
+                        Console.WriteLine("User {0} is now Online.", newClient.getToken());
+                    }
                     break;
                 default:
-                    action.UnknowAction(msg);
+                    Actions.UnknowAction(msg);
                     break;
             }
         }
+
+
 
         private static void SelectEnv()
         {
             string[] envs = { "127.0.0.1", "51.91.156.75" };            
 
             Console.WriteLine("Welcom on NS_MMO server, choose an environment : ");
-            for (int ii = 0; ii < envs.Length; ii++)
+            for (int i = 0; i < envs.Length; i++)
             {
-                Console.WriteLine("{0}. {1}", ii, envs[ii] );
+                Console.WriteLine("{0}. {1}", i, envs[i] );
             }
 
             // wait user select an environment
@@ -133,6 +179,8 @@ namespace Application
             // set environment
             ServerProperties.setAddress(envs[choice]);
         }
+
+
 
     }
 }
