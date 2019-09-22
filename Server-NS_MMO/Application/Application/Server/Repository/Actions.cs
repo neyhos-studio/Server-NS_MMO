@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Text;
-using Application.Server.Entities;
-using Application.Entities;
 using Application.Server.Entities.Authentication;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Application.Server.Mapper;
 using System.Net;
 using Application.Server.Constants;
+using Application.Server.Entities.Client;
+using Application.Server.Entities.Server;
 
 namespace Application.Server.Repository
 {
@@ -86,8 +86,8 @@ namespace Application.Server.Repository
         {
             // Prepare the server message to return
             ServerMessage serverMessage = new ServerMessage();
-                    serverMessage.action = ConstsActions.UNKNOW_ACTION;
-                    serverMessage.data = new string[] { msg.action };
+            serverMessage.action = ConstsActions.UNKNOW_ACTION;
+            serverMessage.data = new string[] { msg.action };
 
             // Send the message
             SendMessage(serverMessage);
@@ -105,13 +105,13 @@ namespace Application.Server.Repository
             // TODO demock ip address
 
             // Get user credentials
-            string[] credentials = msg.data;            
+            string[] credentials = msg.data;
             Credentials userCredentials = new Credentials(credentials[0], credentials[1], new IPAddress(new byte[] { 10, 10, 10, 10 }));
-            
+
             // Call API to try log in to the game
             string apiUrl = "http://51.91.156.75:5000/api/Connexion/Connexion";
             string ouput = userCredentials.ToString();
-            HttpResponseMessage response =  CallApiAsync(apiUrl, ouput).Result;
+            HttpResponseMessage response = CallApiAsync(apiUrl, ouput).Result;
 
             // If we get a good response we send SUCCESS to the user, else we send FAIL ...
             if (response.IsSuccessStatusCode)
@@ -125,14 +125,15 @@ namespace Application.Server.Repository
                 // Prepare the return message of the server to the client 
                 ServerMessage succes = new ServerMessage();
                 succes.action = ConstsActions.CONNECTION;
-                succes.data = new string[]{"SUCCESS", client.getToken()};      
-                
+                succes.data = new string[] { "SUCCESS", client.getToken() };
+
                 // Send the message
                 SendMessage(succes);
 
                 // Return the client to add him in the client list
                 return client;
-            } else
+            }
+            else
             {
                 // Prepare the return message of the server to the client 
                 ServerMessage fail = new ServerMessage();

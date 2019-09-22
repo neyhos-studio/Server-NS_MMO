@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading;
-using Application.Server.Entities;
-using Application.Entities;
+using Application.Server.Entities.Client;
+using Application.Server.Entities.Server;
 using Application.Server.Repository;
 using Application.Server.Constants;
 
@@ -31,7 +31,7 @@ namespace Application
         /// <summary>
         /// List of client connected to the server
         /// </summary>
-        public static List<Client> onlineClients= new List<Client>();
+        public static List<Client> onlineClients = new List<Client>();
         public static object IAction { get; private set; }
         #endregion
 
@@ -66,9 +66,9 @@ namespace Application
 
                     case "test":
 
-                        ServerMessage serverMessage = new ServerMessage("ACTION", new string[] { "AAA", "BBB", "CCC" });
+                        ServerMessage serverMessage = new ServerMessage("KIKI", new string[] { "ASS", "BBB", "CCC", "ddd", "156" });
                         Console.WriteLine(serverMessage.getMessage());
-                        
+
                         break;
                     default:
                         break;
@@ -139,7 +139,7 @@ namespace Application
             // Client message is process depending on the ACTION send;
             switch (msg.action)
             {
-                case ConstsActions.CONNECTION :
+                case ConstsActions.CONNECTION:
                     Client newClient = Actions.ClientConnect(msg);
                     if (newClient != null)
                     {
@@ -157,12 +157,12 @@ namespace Application
 
         private static void SelectEnv()
         {
-            string[] envs = { "127.0.0.1", "51.91.156.75" };            
+            string[] envs = { "127.0.0.1", "51.91.156.75" };
 
             Console.WriteLine("Welcom on NS_MMO server, choose an environment : ");
             for (int i = 0; i < envs.Length; i++)
             {
-                Console.WriteLine("{0}. {1}", i, envs[i] );
+                Console.WriteLine("{0}. {1}", i, envs[i]);
             }
 
             // wait user select an environment

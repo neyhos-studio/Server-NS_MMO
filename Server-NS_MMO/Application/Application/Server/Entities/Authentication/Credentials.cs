@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace Application.Server.Entities.Authentication
 {
@@ -29,8 +24,8 @@ namespace Application.Server.Entities.Authentication
         override public string ToString()
         {
             return "{  " +
-                "\"email\": \""+ this.email + "\",  " +
-                "\"password\": \""+this.password + "\", " +
+                "\"email\": \"" + this.email + "\",  " +
+                "\"password\": \"" + this.password + "\", " +
                 "\"ip\": \"" + this.ip.ToString() + "\" " +
                 "}";
         }

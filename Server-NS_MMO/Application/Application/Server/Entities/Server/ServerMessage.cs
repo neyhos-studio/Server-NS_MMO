@@ -1,16 +1,15 @@
-﻿
-using System;
+﻿using System;
 
-namespace Application.Server.Entities
+namespace Application.Server.Entities.Server
 {
     class ServerMessage
     {
         private const string ID = "SERVER";
         public string action { get; set; }
-        public string[] data { get; set;}
+        public string[] data { get; set; }
 
 
-        public ServerMessage(){ }
+        public ServerMessage() { }
 
 
         public ServerMessage(string action, string[] data)

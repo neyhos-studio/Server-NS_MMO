@@ -1,8 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Net;
 
-namespace Application.Entities
+namespace Application.Server.Entities.Client
 {
     class Client
     {
@@ -25,12 +24,12 @@ namespace Application.Entities
 
         // The client constructor
         public Client(
-            int idUser, 
-            int idAccount, 
-            string nicknameUser, 
-            string firstNameUser, 
-            string lastNameUser, 
-            DateTime birthdayUser, 
+            int idUser,
+            int idAccount,
+            string nicknameUser,
+            string firstNameUser,
+            string lastNameUser,
+            DateTime birthdayUser,
             string genderUser,
             string statusUser
             )

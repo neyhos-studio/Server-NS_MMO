@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Application.Entities
+namespace Application.Server.Entities.Server
 {
     class ServerProperties
     {
@@ -13,7 +13,7 @@ namespace Application.Entities
         {
             return IPAddress.Parse(SERVER_ADDRESS);
         }
-        public static void setAddress( string serverAddress)
+        public static void setAddress(string serverAddress)
         {
             SERVER_ADDRESS = serverAddress;
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 
-namespace Application.Server.Entities
-{ 
+namespace Application.Server.Entities.Client
+{
     class ClientMessage
     {
         public string id { get; }
@@ -19,7 +19,8 @@ namespace Application.Server.Entities
                 this.action = message_index[1];
                 this.data = message_index[2].Split(';');
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 e.GetBaseException();
             }
