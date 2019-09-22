@@ -25,7 +25,7 @@ namespace Application.Server.Repository
         /// Send message to client using socket connection. 	
         /// </summary>
         /// <param name="serverMessage">A server message to send to the client</param>
-        private static void SendMessage(ServerMessage serverMessage)
+        public static void SendMessage(ServerMessage serverMessage)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace Application.Server.Repository
                 // Prepare the return message of the server to the client 
                 ServerMessage succes = new ServerMessage();
                 succes.action = ConstsActions.CONNECTION;
-                succes.data = new string[] { "SUCCESS", client.getToken() };
+                succes.data = new string[] { "SUCCESS", client.idUser.ToString(), client.idAccount.ToString(), client.nicknameUser, client.firstNameUser, client.lastNameUser, client.birthdayUser.ToString(), client.genderUser, client.statusUser };
 
                 // Send the message
                 SendMessage(succes);
@@ -150,6 +150,18 @@ namespace Application.Server.Repository
 
 
 
+        public static int ClientDisconnect(ClientMessage msg)
+        {
+            // get the account id
+            string accountId = msg.data[0].Split('#')[1];
+
+            // Call API to try log in to the game
+            string apiUrl = "http://51.91.156.75:5000/api/Connexion/Deconnexion";
+            string ouput = "{ 'accountId': '" + accountId + "' }";
+            HttpResponseMessage response = CallApiAsync(apiUrl, ouput).Result;
+
+            return int.Parse(accountId);
+        }
         #endregion
 
 

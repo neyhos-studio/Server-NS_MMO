@@ -49,7 +49,7 @@ namespace Application.Server.Entities.Client
         // Nickname#012345
         public string getToken()
         {
-            return this.nicknameUser + "#" + this.idUser;
+            return this.nicknameUser + "#" + this.idAccount;
         }
     }
 }

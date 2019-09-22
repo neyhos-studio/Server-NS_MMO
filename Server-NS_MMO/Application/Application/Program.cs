@@ -7,6 +7,7 @@ using Application.Server.Entities.Client;
 using Application.Server.Entities.Server;
 using Application.Server.Repository;
 using Application.Server.Constants;
+using System.Net;
 
 namespace Application
 {
@@ -139,6 +140,13 @@ namespace Application
             // Client message is process depending on the ACTION send;
             switch (msg.action)
             {
+                case ConstsActions.DISCONNECTION:
+                    Client disconnectionClient = onlineClients.Find(c => c.idAccount == Actions.ClientDisconnect(msg));
+                    onlineClients.Find(c => c.idAccount == disconnectionClient.idAccount).statusUser = "Hors ligne";
+                    ServerMessage msgToSend = new ServerMessage(ConstsActions.DISCONNECTION, new string[] { "Hors ligne" });
+                    Actions.SendMessage(msgToSend);
+                    Console.WriteLine("User {0} is now Offline.", disconnectionClient.getToken());
+                    break;
                 case ConstsActions.CONNECTION:
                     Client newClient = Actions.ClientConnect(msg);
                     if (newClient != null)
