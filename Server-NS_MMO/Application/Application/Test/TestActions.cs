@@ -1,5 +1,5 @@
-﻿using Application.Server.Entities.Server;
-using Application.Server.Entities.Client;
+﻿using Application.Server.Entities.Message;
+using Application.Server.Entities.Message;
 
 namespace Application.Test
 {
@@ -9,14 +9,14 @@ namespace Application.Test
         /// <summary> 	
         /// Send message to client using socket connection. 	
         /// </summary> 	
-        private static void SendMessage(ServerMessage serverMessage)
+        private static void SendMessage(SendMessage serverMessage)
         {
 
         }
 
-        public static void UnknowAction(ClientMessage msg)
+        public static void UnknowAction(ReceivedMessage msg)
         {
-            ServerMessage serverMessage = new ServerMessage();
+            SendMessage serverMessage = new SendMessage();
             serverMessage.action = "UNKNOW_ACTION";
             serverMessage.data = new string[] { msg.action };
 

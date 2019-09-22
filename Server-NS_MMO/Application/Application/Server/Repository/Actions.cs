@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 using Application.Server.Mapper;
 using System.Net;
 using Application.Server.Constants;
-using Application.Server.Entities.Client;
-using Application.Server.Entities.Server;
+using Application.Server.Entities.Message;
 
 namespace Application.Server.Repository
 {
@@ -25,7 +24,7 @@ namespace Application.Server.Repository
         /// Send message to client using socket connection. 	
         /// </summary>
         /// <param name="serverMessage">A server message to send to the client</param>
-        public static void SendMessage(ServerMessage serverMessage)
+        public static void SendMessage(SendMessage serverMessage)
         {
             try
             {
@@ -82,10 +81,10 @@ namespace Application.Server.Repository
         /// Default unknow action
         /// </summary>
         /// <param name="msg">The client message</param>
-        public static void UnknowAction(ClientMessage msg)
+        public static void UnknowAction(ReceivedMessage msg)
         {
             // Prepare the server message to return
-            ServerMessage serverMessage = new ServerMessage();
+            SendMessage serverMessage = new SendMessage();
             serverMessage.action = ConstsActions.UNKNOW_ACTION;
             serverMessage.data = new string[] { msg.action };
 
@@ -100,7 +99,7 @@ namespace Application.Server.Repository
         /// </summary>
         /// <param name="msg">A client message</param>
         /// <returns></returns>
-        public static Client ClientConnect(ClientMessage msg)
+        public static Client ClientConnect(ReceivedMessage msg)
         {
             // TODO demock ip address
 
@@ -116,14 +115,28 @@ namespace Application.Server.Repository
             // If we get a good response we send SUCCESS to the user, else we send FAIL ...
             if (response.IsSuccessStatusCode)
             {
+                Client client;
                 // Map the response from HttpResponseMessage to Client 
-                Client client = ClientMapper.mapAsync(response).Result;
+                try
+                {
+                    client = ClientMapper.mapAsync(response).Result;
+                } catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+                finally
+                {
+                    client = null;
+                }
+
+                if (client == null)
+                    return null;
 
                 // Set the ip of the client to the object client
                 client.idAddress = userCredentials.ip;
 
                 // Prepare the return message of the server to the client 
-                ServerMessage succes = new ServerMessage();
+                SendMessage succes = new SendMessage();
                 succes.action = ConstsActions.CONNECTION;
                 succes.data = new string[] { "SUCCESS", client.idUser.ToString(), client.idAccount.ToString(), client.nicknameUser, client.firstNameUser, client.lastNameUser, client.birthdayUser.ToString(), client.genderUser, client.statusUser };
 
@@ -136,7 +149,7 @@ namespace Application.Server.Repository
             else
             {
                 // Prepare the return message of the server to the client 
-                ServerMessage fail = new ServerMessage();
+                SendMessage fail = new SendMessage();
                 fail.action = ConstsActions.CONNECTION;
                 fail.data = new string[] { "FAIL", response.StatusCode.ToString() };
 
@@ -150,7 +163,7 @@ namespace Application.Server.Repository
 
 
 
-        public static int ClientDisconnect(ClientMessage msg)
+        public static int ClientDisconnect(ReceivedMessage msg)
         {
             // get the account id
             string accountId = msg.data[0].Split('#')[1];

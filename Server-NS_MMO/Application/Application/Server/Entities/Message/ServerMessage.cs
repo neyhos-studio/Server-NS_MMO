@@ -1,18 +1,18 @@
 ﻿using System;
 
-namespace Application.Server.Entities.Server
+namespace Application.Server.Entities.Message
 {
-    class ServerMessage
+    class SendMessage
     {
         private const string ID = "SERVER";
         public string action { get; set; }
         public string[] data { get; set; }
 
 
-        public ServerMessage() { }
+        public SendMessage() { }
 
 
-        public ServerMessage(string action, string[] data)
+        public SendMessage(string action, string[] data)
         {
             this.action = action;
             this.data = data;

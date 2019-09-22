@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace Application.Server.Entities.Client
+namespace Application.Server.Entities.Message
 {
-    class ClientMessage
+    class ReceivedMessage
     {
         public string id { get; }
         public string action { get; }
         public string[] data { get; }
 
-        public ClientMessage(string clientMessage)
+        public ReceivedMessage(string clientMessage)
         {
             string[] message_index;
             try

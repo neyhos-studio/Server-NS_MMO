@@ -1,4 +1,4 @@
-﻿using Application.Server.Entities.Client;
+﻿using Application.Server.Entities.Message;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;

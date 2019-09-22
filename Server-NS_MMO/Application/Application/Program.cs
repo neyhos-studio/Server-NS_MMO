@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading;
-using Application.Server.Entities.Client;
-using Application.Server.Entities.Server;
+using Application.Server.Entities.Message;
 using Application.Server.Repository;
 using Application.Server.Constants;
 using System.Net;
@@ -67,7 +66,7 @@ namespace Application
 
                     case "test":
 
-                        ServerMessage serverMessage = new ServerMessage("KIKI", new string[] { "ASS", "BBB", "CCC", "ddd", "156" });
+                        SendMessage serverMessage = new SendMessage("KIKI", new string[] { "ASS", "BBB", "CCC", "ddd", "156" });
                         Console.WriteLine(serverMessage.getMessage());
 
                         break;
@@ -135,7 +134,7 @@ namespace Application
         private static void RequestManager(string clientMessage)
         {
             // Put the client string message into an object ClientMessage
-            ClientMessage msg = new ClientMessage(clientMessage);
+            ReceivedMessage msg = new ReceivedMessage(clientMessage);
 
             // Client message is process depending on the ACTION send;
             switch (msg.action)
@@ -143,7 +142,7 @@ namespace Application
                 case ConstsActions.DISCONNECTION:
                     Client disconnectionClient = onlineClients.Find(c => c.idAccount == Actions.ClientDisconnect(msg));
                     onlineClients.Find(c => c.idAccount == disconnectionClient.idAccount).statusUser = "Hors ligne";
-                    ServerMessage msgToSend = new ServerMessage(ConstsActions.DISCONNECTION, new string[] { "Hors ligne" });
+                    SendMessage msgToSend = new SendMessage(ConstsActions.DISCONNECTION, new string[] { "Hors ligne" });
                     Actions.SendMessage(msgToSend);
                     Console.WriteLine("User {0} is now Offline.", disconnectionClient.getToken());
                     break;
